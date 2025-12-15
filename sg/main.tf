@@ -19,7 +19,7 @@ module "web_sg" {
       source_security_group_id = module.alb_sg.security_group_id
     }
   ]
-  # Allow outbound HTTPS to VPC endpoints and external
+  # Allow outbound HTTPS, MySQL, Redis to VPC endpoints and external
   egress_rules       = ["https-443-tcp", "mysql-tcp", "redis-tcp"]
   egress_cidr_blocks = ["0.0.0.0/0"]
 }
