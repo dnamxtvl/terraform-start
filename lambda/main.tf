@@ -1,6 +1,6 @@
 data "archive_file" "log_channel_zip" {
   type        = "zip"
-  source_file = "${path.module}/log-channel.js"
+  source_file = "${path.module}/log-channel.mjs"
   output_path = "${path.module}/log-channel.zip"
 }
 

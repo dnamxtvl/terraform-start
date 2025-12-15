@@ -68,8 +68,8 @@ const sendToGoogleChat = async (webhookUrl, message) => {
 async function sendErrorStack(errorStack) {
   const fullErrorMessage = errorStack.join("\n");
   const truncatedMessage =
-    fullErrorMessage.length > 3000
-      ? fullErrorMessage.substring(0, 3000) + "..."
+    fullErrorMessage.length > 4000
+      ? fullErrorMessage.substring(0, 4000) + "..."
       : fullErrorMessage;
   console.log(
     `📦 [Error Stack] Sending ${errorStack.length} lines to ERROR channel`
