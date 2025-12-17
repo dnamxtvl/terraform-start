@@ -11,27 +11,25 @@ resource "aws_amplify_app" "quizz_app" {
   enable_auto_branch_creation = false
   enable_branch_auto_deletion = false
 
-  # The default build_spec added by the Amplify Console for Nuxt 3.
   build_spec = <<-EOT
     version: 1
     frontend:
-    phases:
+      phases:
         preBuild:
-        commands:
+          commands:
             - nvm use 20
-            - node --version
-            - npm install
-        build:
-        commands:
             - npm ci
+        build:
+          commands:
             - npm run build
             - mkdir -p .amplify-hosting
             - cp deploy-manifest.json .amplify-hosting/deploy-manifest.json
-    artifacts:
+      artifacts:
         baseDirectory: .output/public
         files:
-      - "**/*"
+          - "**/*"
   EOT
+
 
   # The default rewrites and redirects added by the Amplify Console.
   custom_rule {
