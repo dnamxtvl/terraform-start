@@ -114,18 +114,37 @@ resource "aws_amplify_domain_association" "main" {
   wait_for_verification = true
 }
 
+# Route53 record for certificate verification
+resource "aws_route53_record" "amplify_cert_verification" {
+  zone_id = data.aws_route53_zone.selected_zone.zone_id
+  name    = split(" ", aws_amplify_domain_association.main.certificate_settings[0].certificate_verification_dns_record)[0]
+  type    = "CNAME"
+  ttl     = 60
+
+  records = [
+    split(" ", aws_amplify_domain_association.main.certificate_settings[0].certificate_verification_dns_record)[2]
+  ]
+
+  allow_overwrite = true
+
+  depends_on = [aws_amplify_domain_association.main]
+}
+
+# Route53 CNAME record for quiz.5qsoft.com to Amplify CloudFront
 resource "aws_route53_record" "quiz_amplify" {
   zone_id = data.aws_route53_zone.selected_zone.zone_id
   name    = "quiz.${var.domain_name}"
   type    = "CNAME"
   ttl     = 300
 
-  # get the dns record for the quiz subdomain
+  # Parse dns_record: "quiz CNAME dbwjtoa0eebni.cloudfront.net"
   records = [
     for subdomain in aws_amplify_domain_association.main.sub_domain :
-    subdomain.dns_record
+    split(" ", subdomain.dns_record)[2]  # Get the CloudFront domain
     if subdomain.prefix == "quiz"
   ]
+
+  allow_overwrite = true
 
   depends_on = [aws_amplify_domain_association.main]
 }
