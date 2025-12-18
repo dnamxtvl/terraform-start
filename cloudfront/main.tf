@@ -76,6 +76,15 @@ module "cloudfront" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
+  origin_access_control = {
+    s3_oac = {
+      description      = "CloudFront access to S3"
+      origin_type      = "s3"
+      signing_behavior = "always"
+      signing_protocol = "sigv4"
+    }
+  }
+
   # Default cache behavior
   default_cache_behavior = {
     target_origin_id       = var.s3_bucket_id
