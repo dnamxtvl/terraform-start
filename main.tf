@@ -157,5 +157,14 @@ module "amplify" {
   fe_domain = var.fe_domain
 }
 
+module "cloudfront" {
+  source = "./cloudfront"
+
+  domain_name                      = var.domain_name
+  s3_bucket_regional_domain_name   = module.s3.bucket_regional_domain_name
+  s3_bucket_id                     = module.s3.bucket_id
+  route53_zone_id                  = module.route53.zone_id
+}
+
 # Data source for current AWS account ID
 data "aws_caller_identity" "current" {}
