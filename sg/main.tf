@@ -31,15 +31,15 @@ module "web_sg" {
       protocol                 = "tcp"
       source_security_group_id = module.alb_sg.security_group_id
     },
-    {
-      from_port                = 8080
-      to_port                  = 8080
+    { 
+      from_port                = 443
+      to_port                  = 443
       protocol                 = "tcp"
       source_security_group_id = module.alb_sg.security_group_id
     }
   ]
-  # Allow outbound HTTPS, MySQL, Redis to VPC endpoints and external
-  egress_rules       = ["https-443-tcp", "mysql-tcp", "redis-tcp"]
+  # Allow all out bound traffic
+  egress_rules       = ["all-all"]
   egress_cidr_blocks = ["0.0.0.0/0"]
 }
 
