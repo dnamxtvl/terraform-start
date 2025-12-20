@@ -11,6 +11,12 @@ data "aws_route53_zone" "selected_zone" {
   private_zone = false
 }
 
+# Data source for AWS managed CloudFront cache policy
+# CachingOptimized - Optimized for caching static content
+data "aws_cloudfront_cache_policy" "caching_optimized" {
+  name = "Managed-CachingOptimized"
+}
+
 # ACM Certificate for CloudFront (must be in us-east-1)
 resource "aws_acm_certificate" "cloudfront_cert" {
   provider = aws.us-east-1
@@ -95,14 +101,10 @@ module "cloudfront" {
     cached_methods  = ["GET", "HEAD"]
     compress        = true
 
-    min_ttl     = 0
-    default_ttl = 3600
-    max_ttl     = 86400
-
-    use_forwarded_values = false
-
-    # Use managed cache policy for better performance
-    cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # Managed-CachingOptimized
+    # When using cache_policy_id, TTL settings (min_ttl, default_ttl, max_ttl)
+    # and use_forwarded_values are ignored as they're defined in the cache policy
+    # Use AWS managed cache policy for better performance and best practices
+    cache_policy_id = data.aws_cloudfront_cache_policy.caching_optimized.id
   }
 
   # S3 Origin (using custom origin config for HTTPS)
