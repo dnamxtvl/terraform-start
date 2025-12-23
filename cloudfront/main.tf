@@ -17,6 +17,29 @@ data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
 }
 
+# Custom Cache Policy for 6 months (approx 180 days)
+resource "aws_cloudfront_cache_policy" "long_cache" {
+  name        = "Custom-LongCache-6Months"
+  comment     = "Cache policy for 6 months for immutable files (UUID)"
+  default_ttl = 15552000 # 6 months
+  max_ttl     = 31536000 # 1 year
+  min_ttl     = 1
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "none"
+    }
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+    enable_accept_encoding_brotli = true
+    enable_accept_encoding_gzip   = true
+  }
+}
+
 # ACM Certificate for CloudFront (must be in us-east-1)
 resource "aws_acm_certificate" "cloudfront_cert" {
   provider = aws.us-east-1
@@ -103,8 +126,8 @@ module "cloudfront" {
 
     # When using cache_policy_id, TTL settings (min_ttl, default_ttl, max_ttl)
     # and use_forwarded_values are ignored as they're defined in the cache policy
-    # Use AWS managed cache policy for better performance and best practices
-    cache_policy_id = data.aws_cloudfront_cache_policy.caching_optimized.id
+    # Use custom cache policy for 6 months retention
+    cache_policy_id = aws_cloudfront_cache_policy.long_cache.id
   }
 
   # S3 Origin (using custom origin config for HTTPS)
