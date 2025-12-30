@@ -43,3 +43,6 @@ repository_url =
 
 # front end domain name
 fe_domain =
+
+# desired count
+desired_count =

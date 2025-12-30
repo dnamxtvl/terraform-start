@@ -133,6 +133,7 @@ module "ecs" {
   alb_listener_arn       = module.alb.listener_arn
   container_nginx_port   = 80
   container_fpm_port     = 9000
+  desired_count          = var.desired_count
 }
 
 module "cloudwatch" {

@@ -39,3 +39,8 @@ variable "container_fpm_port" {
   type    = number
   default = 9000
 }
+
+variable "desired_count" {
+  type    = number
+  default = 1
+}

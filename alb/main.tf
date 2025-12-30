@@ -5,6 +5,8 @@ resource "aws_lb" "application_load_balancer" {
   subnets            = [for subnet in var.vpc.public_subnets : subnet.id]
   security_groups    = [var.sg.lb]
 
+  count = 0
+
   tags = {
     Name = "quiz-alb"
   }
@@ -60,7 +62,7 @@ resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_lb.application_load_balancer.arn
   port              = "443"
   protocol          = "HTTPS"
-  
+
   certificate_arn = var.lb_acm_certificate_arn
 
   default_action {

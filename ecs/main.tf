@@ -69,7 +69,7 @@ resource "aws_ecs_service" "ecs_service" {
   cluster              = aws_ecs_cluster.ecs_cluster.id
   task_definition      = aws_ecs_task_definition.task_definition.arn
   launch_type          = "FARGATE"
-  desired_count        = 1
+  desired_count        = var.desired_count
   force_new_deployment = true
 
   network_configuration {

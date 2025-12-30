@@ -120,3 +120,8 @@ variable "fe_domain" {
   description = "Front end domain name"
   type        = string
 }
+
+variable "desired_count" {
+  description = "Desired count for the ECS service"
+  type        = number
+}
