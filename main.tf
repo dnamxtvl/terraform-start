@@ -50,6 +50,12 @@ module "alb" {
   domain_name            = var.domain_name
 }
 
+module "waf" {
+  source = "./waf"
+
+  alb_arn = module.alb.alb_arn
+}
+
 module "rds" {
   source = "./rds"
 
